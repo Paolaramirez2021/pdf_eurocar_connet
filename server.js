@@ -11,9 +11,14 @@ app.post("/generate-pdf", async (req, res) => {
   try {
     const { html } = req.body;
 
-    const browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"]
-    });
+const browser = await puppeteer.launch({
+  executablePath: '/usr/bin/google-chrome', // Ruta estándar en contenedores Linux
+  args: [
+    "--no-sandbox", 
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage" // Importante para evitar errores de memoria en la nube
+  ]
+});
 
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "networkidle0" });
